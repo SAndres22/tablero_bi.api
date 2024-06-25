@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-
+using System.Data;
 namespace tablero_bi.Infraestructure
 {
     public static class DependencyInyection

@@ -15,6 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tablero_bi.Domain", "tabler
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tablero_bi.Infraestructure", "tablero_bi.Infraestructure\tablero_bi.Infraestructure.csproj", "{9C6246B1-E815-4AD1-A6AA-BF35A1A6A89F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{222A6C75-8717-4BB2-A60C-F723583C292A}"
+	ProjectSection(SolutionItems) = preProject
+		scriptBD.sql = scriptBD.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
