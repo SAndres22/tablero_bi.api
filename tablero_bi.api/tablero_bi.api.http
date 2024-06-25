@@ -1,0 +1,6 @@
+@tablero_bi.api_HostAddress = http://localhost:5160
+
+GET {{tablero_bi.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
