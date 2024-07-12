@@ -9,7 +9,7 @@
         public string ImagenUrl { get; set; }
         public string RoleId { get; set; }
 
-        public Empresa Empresas { get; set; }
+        public Empresas Empresas { get; set; }
         public Roles Roles { get; set; }
     }
 }

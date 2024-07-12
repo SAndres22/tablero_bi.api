@@ -25,7 +25,7 @@ namespace tablero_bi.api.Controllers
         {
             var result = await _usuarioService.LoginAsync(loginRequest);
             return result.IsSuccess
-                ? (IActionResult)Ok(result) // Respuesta exitosa
+                ? (IActionResult)Ok(result)
                 : BadRequest(result);
         }
 
@@ -36,7 +36,7 @@ namespace tablero_bi.api.Controllers
 
             var result = await _tokenService.RevokeToken(token);
             return result.IsSuccess
-                ?(IActionResult)Ok(result) : BadRequest(result);
+                ?(IActionResult)Ok(result.message) : BadRequest(result.message);
         }
     }
 }

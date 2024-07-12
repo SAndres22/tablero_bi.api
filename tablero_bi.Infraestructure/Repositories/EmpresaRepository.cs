@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using System.Data;
+using System.Data.SqlClient;
+using tablero_bi.Domain.Entities;
 using tablero_bi.Domain.Interfaces;
 
 namespace tablero_bi.Infraestructure.Repositories
@@ -21,15 +23,80 @@ namespace tablero_bi.Infraestructure.Repositories
                 WHERE u.Username = @Username
                 AND e.Nit = @Nit";
 
-            var count = await _db.ExecuteScalarAsync<int>(query, new {Nit = nitEmpresa, Username = username});
+            var count = await _db.ExecuteScalarAsync<int>(query, new { Nit = nitEmpresa, Username = username });
             return count > 0;
         }
 
-        public async Task<bool> CompanyExistsAsync(string nitEmpresa)
+        public async Task<bool> CompanyExistsByIdAsync(int id)
+        {
+            var query = "SELECT COUNT(1) FROM Empresas WHERE EmpresaId = @Id ";
+            var count = await _db.ExecuteScalarAsync<int>(query, new { Id = id });
+            return count > 0;
+        }
+
+        public async Task<bool> CompanyExistsByNitAsync(string nitEmpresa)
         {
             var query = "SELECT COUNT(1) FROM Empresas WHERE Nit = @Nit ";
             var count = await _db.ExecuteScalarAsync<int>(query, new { Nit = nitEmpresa });
             return count > 0;
+        }
+
+        public async Task<bool> CreateEmpresaAsync(Empresas empresa)
+        {
+            var query = @"INSERT INTO Empresas(Nit, NombreEmpresa) VALUES (@Nit, @NombreEmpresa)";
+            var count = await _db.ExecuteAsync(query, new { Nit = empresa.Nit, NombreEmpresa = empresa.NombreEmpresa });
+
+            return count > 0;
+        }
+
+        public async Task<bool> DeleteEmpresaAsync(string nitEmpresa)
+        {
+            var query = @"DELETE FROM Empresas WHERE Nit = @Nit";
+            try
+            {
+                var affectedRows = await _db.ExecuteAsync(query, new { Nit = nitEmpresa });
+                return affectedRows > 0;
+            }
+            catch (SqlException ex) when (ex.Number == 547) // 547 es el error de violación de clave externa
+            {
+                return false; 
+            }
+        }
+
+        public async Task<bool> EditEmpresaAsync(Empresas empresas, string nit)
+        {
+            var query = @"
+                UPDATE Empresas
+                SET NombreEmpresa = @NombreEmpresa
+                WHERE Nit = @Nit"
+            ;
+
+            var parameters = new { NombreEmpresa = empresas.NombreEmpresa, Nit = nit };
+
+            var affectedRows = await _db.ExecuteAsync(query, parameters);
+            return affectedRows > 0;
+
+        }
+
+        public async Task<IEnumerable<Empresas>> GetAllEmpresasAsync()
+        {
+            var query = @"SELECT Nit, NombreEmpresa FROM Empresas";
+            var listEmpresas = await _db.QueryAsync<Empresas>(query);
+            return listEmpresas;
+        }
+
+        public async Task<Empresas> GetEmpresaByNitAsync(string nit)
+        {
+            var exist = await CompanyExistsByNitAsync(nit);
+            if (!exist)
+            {
+                return null;
+            }
+
+            var query = @"SELECT Nit, NombreEmpresa FROM Empresas
+                WHERE Nit = @Nit";
+            var empresa = await _db.QueryFirstAsync<Empresas>(query, new { Nit = nit });
+            return empresa;
         }
     }
 }

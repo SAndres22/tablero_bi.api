@@ -14,6 +14,10 @@ namespace tablero_bi.Application
             services.AddTransient<IUsuarioService, UsuarioService>();
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<ICifradoService, CifradoService>();
+            services.AddTransient<IEmpresaService, EmpresaService>();
+            services.AddTransient<ISucursalService, SucursalService>();
+
+
 
 
             return services;

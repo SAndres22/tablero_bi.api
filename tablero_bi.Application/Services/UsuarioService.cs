@@ -35,7 +35,7 @@ namespace tablero_bi.Application.Services
                 return validationResult;
             }
 
-            var companyExists = await _empresaRepository.CompanyExistsAsync(loginRequest.NitEmpresa);
+            var companyExists = await _empresaRepository.CompanyExistsByNitAsync(loginRequest.NitEmpresa);
             if (!companyExists)
             {
                 return new Result<LoginResponseDto>().Failed(new List<string> { "El NIT de la empresa no existe." });

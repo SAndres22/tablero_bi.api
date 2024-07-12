@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2833E117-20D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EE35C83D-FF64-4A6F-AD8B-6908E43B4C7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tablero_bi.Application", "tablero_bi.Application\tablero_bi.Application.csproj", "{1B4EA877-CC94-45CB-998A-A421E9BC1BC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tablero_bi.Application", "tablero_bi.Application\tablero_bi.Application.csproj", "{1B4EA877-CC94-45CB-998A-A421E9BC1BC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tablero_bi.Domain", "tablero_bi.Domain\tablero_bi.Domain.csproj", "{698B7193-DFE8-43A7-BD5B-33C096025BFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tablero_bi.Domain", "tablero_bi.Domain\tablero_bi.Domain.csproj", "{698B7193-DFE8-43A7-BD5B-33C096025BFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tablero_bi.Infraestructure", "tablero_bi.Infraestructure\tablero_bi.Infraestructure.csproj", "{9C6246B1-E815-4AD1-A6AA-BF35A1A6A89F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tablero_bi.Infraestructure", "tablero_bi.Infraestructure\tablero_bi.Infraestructure.csproj", "{9C6246B1-E815-4AD1-A6AA-BF35A1A6A89F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{222A6C75-8717-4BB2-A60C-F723583C292A}"
 	ProjectSection(SolutionItems) = preProject

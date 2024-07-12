@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="itext" Version="8.0.4" />
+    <PackageReference Include="itext7.pdfoptimizer" Version="3.0.1" />
     <PackageReference Include="NLog" Version="5.3.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
 	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
   </ItemGroup>
 

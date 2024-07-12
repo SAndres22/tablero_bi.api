@@ -124,7 +124,7 @@ namespace tablero_bi.Application.Services
                 return new Result<RevokedToken>().Failed(new List<string> { "Error de Token" });
             }
 
-            return new Result<RevokedToken>().Success(new RevokedToken { Message = "Sesion cerrada exitosamente" });
+            return new Result<RevokedToken>().Success(revokedToken, new List<string> {  "Sesion cerrada exitosamente" });
 
         }
 

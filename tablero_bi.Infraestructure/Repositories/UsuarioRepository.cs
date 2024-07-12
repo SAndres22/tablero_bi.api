@@ -36,7 +36,7 @@ namespace tablero_bi.Infraestructure.Repositories
 
             var lookup = new Dictionary<int, Usuarios>();
 
-            var result = await _db.QueryAsync<Usuarios, Roles, Empresa, Usuarios>(
+            var result = await _db.QueryAsync<Usuarios, Roles, Empresas, Usuarios>(
                 sql,
                 (usuario, role, empresa) =>
                 {

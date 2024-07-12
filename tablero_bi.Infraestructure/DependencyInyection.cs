@@ -6,12 +6,13 @@ namespace tablero_bi.Infraestructure
     public static class DependencyInyection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
-        {
-            
+        {   
 
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddTransient<IEmpresaRepository, EmpresaRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
+            services.AddTransient<ISucursalRepository, SucursalRepository>();
+
 
             return services;
         }
