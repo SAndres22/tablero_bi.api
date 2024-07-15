@@ -67,11 +67,16 @@ namespace tablero_bi.Infraestructure.Repositories
         {
             var query = @"
                 UPDATE Empresas
-                SET NombreEmpresa = @NombreEmpresa
+                SET NombreEmpresa = @NombreEmpresa,
+                Logo = @Logo, Email = @Email
                 WHERE Nit = @Nit"
             ;
 
-            var parameters = new { NombreEmpresa = empresas.NombreEmpresa, Nit = nit };
+            var parameters = new { 
+                NombreEmpresa = empresas.NombreEmpresa, 
+                Logo = empresas.Logo,
+                Email = empresas.Email,
+                Nit = nit };
 
             var affectedRows = await _db.ExecuteAsync(query, parameters);
             return affectedRows > 0;
@@ -80,7 +85,7 @@ namespace tablero_bi.Infraestructure.Repositories
 
         public async Task<IEnumerable<Empresas>> GetAllEmpresasAsync()
         {
-            var query = @"SELECT Nit, NombreEmpresa FROM Empresas";
+            var query = @"SELECT Nit, NombreEmpresa, Logo,Email, FechaDeSistema FROM Empresas";
             var listEmpresas = await _db.QueryAsync<Empresas>(query);
             return listEmpresas;
         }
@@ -93,7 +98,7 @@ namespace tablero_bi.Infraestructure.Repositories
                 return null;
             }
 
-            var query = @"SELECT Nit, NombreEmpresa FROM Empresas
+            var query = @"SELECT Nit, NombreEmpresa,Logo,Email,FechaDeSistema FROM Empresas
                 WHERE Nit = @Nit";
             var empresa = await _db.QueryFirstAsync<Empresas>(query, new { Nit = nit });
             return empresa;

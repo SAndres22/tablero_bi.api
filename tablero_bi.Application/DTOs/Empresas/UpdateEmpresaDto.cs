@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace tablero_bi.Application.DTOs.Empresas
 {
@@ -9,5 +10,8 @@ namespace tablero_bi.Application.DTOs.Empresas
 
         [Required(ErrorMessage = "El Nombre de la empresa es Obligatorio")]
         public string NombreEmpresa { get; set; }
+        public string? Logo { get; set; }
+        public string? Email { get; set; }
+        public IFormFile? LogoFile { get; set; }
     }
 }

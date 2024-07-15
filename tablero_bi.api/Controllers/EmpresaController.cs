@@ -52,17 +52,9 @@ namespace tablero_bi.api.Controllers
 
         [HttpPut("EditEmpresa")]
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> EditEmpresa(UpdateEmpresaDto empresaDto)
+        public async Task<IActionResult> EditEmpresa([FromForm]UpdateEmpresaDto empresaDto)
         {
-            var empresaActualResult = await _empresaService.GetEmpresaByNitAsync(empresaDto.Nit);
-
-            if (!empresaActualResult.IsSuccess)
-            {
-                return BadRequest(empresaActualResult);
-            }
-
-            var empresaActual = empresaActualResult.data;
-            var result = await _empresaService.EditEmpresaAsync(empresaDto, empresaActual);
+            var result = await _empresaService.EditEmpresaAsync(empresaDto);
 
             return result.IsSuccess
                 ? (IActionResult)Ok(result)
@@ -73,12 +65,6 @@ namespace tablero_bi.api.Controllers
         [Authorize(Policy = "RequireSuperUserRole")]
         public async Task<IActionResult> DeleteEmpresa(string nitEmpresa)
         {
-            var empresaToDelete = await _empresaService.GetEmpresaByNitAsync(nitEmpresa);
-            if (!empresaToDelete.IsSuccess)
-            {
-                BadRequest(empresaToDelete);
-            }
-
             var result = await _empresaService.DeleteEmpresaAsync(nitEmpresa);
             return result.IsSuccess
                 ?(IActionResult)Ok(result)

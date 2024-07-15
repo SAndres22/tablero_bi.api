@@ -6,11 +6,11 @@ using tablero_bi.Application.Interfaces;
 
 namespace tablero_bi.Application.Services
 {
-    public class UploadImagenService : IUploadImagenService
+    public class ImagenService : IImagenService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UploadImagenService(IHttpContextAccessor httpContextAccessor)
+        public ImagenService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -82,8 +82,12 @@ namespace tablero_bi.Application.Services
             }
             catch (IOException ioEx)
             {
-                return new Result<TDto>().Failed(new List<string> { "Error al guardar el archivo en el servidor: " + ioEx.Message });
+                if (File.Exists(rutaCompleta))
+                {
+                    File.Delete(rutaCompleta);
+                }
 
+                return new Result<TDto>().Failed(new List<string> { "Error al guardar el archivo en el servidor: " + ioEx.Message });
             }
         }
 
@@ -103,6 +107,37 @@ namespace tablero_bi.Application.Services
         {
             string[] extensionesValidas = { ".svg", ".png" };
             return extensionesValidas.Contains(extension);
+        }
+
+        public async Task<Result<TDto>> EditarImagen<TDto>(IFormFile file, string rutaCarpetas, Func<string, TDto> editarDto, string urlImagenAnterior)
+        {
+            var resultado = await SubirImagen(file, rutaCarpetas, editarDto);
+            await EliminarImagen(urlImagenAnterior);
+            return resultado;
+        }
+
+        public async Task<Result<bool>> EliminarImagen(string logoUrl)
+        {
+            if (string.IsNullOrWhiteSpace(logoUrl))
+            {
+                return new Result<bool>().Success(true, new List<string> { null });
+            }
+
+            try
+            {
+                Uri uri = new Uri(logoUrl);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), uri.LocalPath.TrimStart('/'));
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                return new Result<bool>().Success(true, new List<string> { null });
+            }
+            catch (Exception ex)
+            {
+                return new Result<bool>().Failed( new List<string> { $"Error al eliminar la imagen anterior: {ex.Message}" });
+            }
         }
     }
 }

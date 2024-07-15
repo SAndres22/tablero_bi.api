@@ -9,12 +9,12 @@ namespace tablero_bi.Application.Services
 {
     public class EmpresaService : IEmpresaService
     {
-        private readonly IUploadImagenService _imagenService;
+        private readonly IImagenService _imagenService;
         private readonly IEmpresaRepository _empresaRepository;
         private readonly IMapper _mapper;
 
         public EmpresaService(IEmpresaRepository empresaRepository, IMapper mapper, 
-            IUploadImagenService imagenService)
+            IImagenService imagenService)
         {
             _empresaRepository = empresaRepository;
             _mapper = mapper;
@@ -66,24 +66,51 @@ namespace tablero_bi.Application.Services
                 return new Result<bool>().Failed(new List<string> { "El Nit no puede estar vacio" });
             }
 
+            var empresaActual = await _empresaRepository.GetEmpresaByNitAsync(nitEmpresa);
+
+            if (empresaActual == null)
+            {
+                return new Result<bool>().Failed(new List<string> { "No existe la empresa" });
+            }
+
             var isDelete = await _empresaRepository.DeleteEmpresaAsync(nitEmpresa);
+
             if (!isDelete)
             {
                 return new Result<bool>().Failed(new List<string> { "No se logro eliminar la empresa" });
             }
 
+            await _imagenService.EliminarImagen(empresaActual.Logo);
+
             return new Result<bool>().Success(true, new List<string> { "Empresa Eliminada" });
 
         }
 
-        public async Task<Result<UpdateEmpresaDto>> EditEmpresaAsync(UpdateEmpresaDto updateEmpresaDto, EmpresaDto empresaDto)
+        public async Task<Result<UpdateEmpresaDto>> EditEmpresaAsync(UpdateEmpresaDto updateEmpresaDto)
         {
+            var empresaActual = await _empresaRepository.GetEmpresaByNitAsync(updateEmpresaDto.Nit);
+
+            if (empresaActual == null)
+            {
+                return new Result<UpdateEmpresaDto>().Failed(new List<string> { "No existe la empresa" });
+            }
+
+            var empresaImagen = await _imagenService.EditarImagen(updateEmpresaDto.LogoFile, "Images/Logos", (url) => new UpdateEmpresaDto { Logo = url }, empresaActual.Logo);
+
+            if (!empresaImagen.IsSuccess)
+            {
+                return empresaImagen;
+            }
+
             var empresa = new Empresas()
             {
-                NombreEmpresa = updateEmpresaDto.NombreEmpresa
+                NombreEmpresa = updateEmpresaDto.NombreEmpresa,
+                Email = updateEmpresaDto.Email,
+                Logo = empresaImagen.data.Logo
+                
             };
 
-            var isUpdated = await _empresaRepository.EditEmpresaAsync(empresa,  empresaDto.Nit);
+            var isUpdated = await _empresaRepository.EditEmpresaAsync(empresa, updateEmpresaDto.Nit);
 
             if (!isUpdated)
             {

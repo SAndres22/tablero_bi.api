@@ -18,7 +18,7 @@ namespace tablero_bi.Application
             services.AddTransient<ICifradoService, CifradoService>();
             services.AddTransient<IEmpresaService, EmpresaService>();
             services.AddTransient<ISucursalService, SucursalService>();
-            services.AddTransient<IUploadImagenService, UploadImagenService>();
+            services.AddTransient<IImagenService, ImagenService>();
 
 
 
