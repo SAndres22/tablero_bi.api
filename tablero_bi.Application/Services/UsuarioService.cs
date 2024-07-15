@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using tablero_bi.Application.Common;
-using tablero_bi.Application.DTOs;
+using tablero_bi.Application.DTOs.Login;
 using tablero_bi.Application.Interfaces;
 using tablero_bi.Domain.Interfaces;
 

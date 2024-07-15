@@ -9,13 +9,16 @@ namespace tablero_bi.Application.Services
 {
     public class EmpresaService : IEmpresaService
     {
+        private readonly IUploadImagenService _imagenService;
         private readonly IEmpresaRepository _empresaRepository;
         private readonly IMapper _mapper;
 
-        public EmpresaService(IEmpresaRepository empresaRepository, IMapper mapper)
+        public EmpresaService(IEmpresaRepository empresaRepository, IMapper mapper, 
+            IUploadImagenService imagenService)
         {
             _empresaRepository = empresaRepository;
             _mapper = mapper;
+            _imagenService = imagenService;
         }
 
         public async Task<Result<CreateEmpresaDto>> CreateEmpresaAsync(CreateEmpresaDto empresaDto)
@@ -32,10 +35,19 @@ namespace tablero_bi.Application.Services
                 return new Result<CreateEmpresaDto>().Failed(new List<string> { "El NIT de la empresa ya existe." });
             }
 
+            var empresaImagen = await _imagenService.SubirImagen(empresaDto.LogoFile, "Images/Logos", (url) => new CreateEmpresaDto { Logo = url });
+
+            if (!empresaImagen.IsSuccess)
+            {
+                return empresaImagen;
+            }
+
             var nuevaEmpresa = new Empresas()
             {
                 Nit = empresaDto.Nit,
-                NombreEmpresa = empresaDto.NombreEmpresa
+                NombreEmpresa = empresaDto.NombreEmpresa,
+                Logo = empresaImagen.data.Logo,
+                Email = empresaDto.Email,
             };
 
             var empresaCreada = await _empresaRepository.CreateEmpresaAsync(nuevaEmpresa);

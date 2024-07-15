@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using tablero_bi.Application.DTOs;
+using tablero_bi.Application.DTOs.Login;
 using tablero_bi.Application.Interfaces;
 
 namespace tablero_bi.api.Controllers

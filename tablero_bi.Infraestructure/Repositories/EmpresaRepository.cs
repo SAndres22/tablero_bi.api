@@ -43,8 +43,8 @@ namespace tablero_bi.Infraestructure.Repositories
 
         public async Task<bool> CreateEmpresaAsync(Empresas empresa)
         {
-            var query = @"INSERT INTO Empresas(Nit, NombreEmpresa) VALUES (@Nit, @NombreEmpresa)";
-            var count = await _db.ExecuteAsync(query, new { Nit = empresa.Nit, NombreEmpresa = empresa.NombreEmpresa });
+            var query = @"INSERT INTO Empresas(Nit, NombreEmpresa,Logo, Email) VALUES (@Nit, @NombreEmpresa, @Logo, @Email)";
+            var count = await _db.ExecuteAsync(query, empresa);
 
             return count > 0;
         }

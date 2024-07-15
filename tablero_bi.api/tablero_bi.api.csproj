@@ -21,4 +21,9 @@
     <ProjectReference Include="..\tablero_bi.Infraestructure\tablero_bi.Infraestructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+    <Folder Include="Images\Logos\" />
+  </ItemGroup>
+
 </Project>

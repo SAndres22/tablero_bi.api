@@ -1,5 +1,5 @@
 ﻿using tablero_bi.Application.Common;
-using tablero_bi.Application.DTOs;
+using tablero_bi.Application.DTOs.Sucursales;
 
 namespace tablero_bi.Application.Interfaces
 {

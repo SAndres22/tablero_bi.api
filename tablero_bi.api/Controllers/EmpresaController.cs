@@ -42,7 +42,7 @@ namespace tablero_bi.api.Controllers
 
         [HttpPost("CreateEmpresa")]
         [Authorize(Policy = "RequireSuperUserRole")]
-        public async Task<IActionResult> CreateEmpresa([FromBody] CreateEmpresaDto empresaDto)
+        public async Task<IActionResult> CreateEmpresa([FromForm] CreateEmpresaDto empresaDto)
         {
             var result = await _empresaService.CreateEmpresaAsync(empresaDto);
             return result.IsSuccess

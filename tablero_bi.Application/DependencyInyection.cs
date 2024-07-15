@@ -8,6 +8,8 @@ namespace tablero_bi.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             //Configuracion de Automapper
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -16,6 +18,8 @@ namespace tablero_bi.Application
             services.AddTransient<ICifradoService, CifradoService>();
             services.AddTransient<IEmpresaService, EmpresaService>();
             services.AddTransient<ISucursalService, SucursalService>();
+            services.AddTransient<IUploadImagenService, UploadImagenService>();
+
 
 
 

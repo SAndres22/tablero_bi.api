@@ -1,4 +1,4 @@
-﻿namespace tablero_bi.Application.DTOs
+﻿namespace tablero_bi.Application.DTOs.Login
 {
     public class LoginResponseDto
     {
