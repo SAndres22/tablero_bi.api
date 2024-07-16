@@ -139,6 +139,19 @@ namespace tablero_bi.Application.Services
             return new Result<EmpresaDto>().Success(empresa, new List<string> { "Empresa encontrada" });
         }
 
+        public async Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAllSucursalesAsyn()
+        {
+            var listEmpresas = await _empresaRepository.GetAllEmpresasAndSucursales();
+            if (listEmpresas == null || !listEmpresas.Any())
+            {
+                return new Result<IEnumerable<EmpresaDto>>().Failed(new List<string> { "No hay empresas registradas" });
+            }
+
+            var listEmpresasDto = _mapper.Map<IEnumerable<EmpresaDto>>(listEmpresas);
+
+            return new Result<IEnumerable<EmpresaDto>>().Success(listEmpresasDto, new List<string> { "Listado de Empresas con sucursales" });
+        }
+
         public async Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAsync()
         {
             var listEmpresas = await _empresaRepository.GetAllEmpresasAsync();
@@ -151,6 +164,8 @@ namespace tablero_bi.Application.Services
 
             return new Result<IEnumerable<EmpresaDto>>().Success(listEmpresasDto, new List<string> { "Listado de Empresas encontrado" });
         }
+
+        
 
         private Result<CreateEmpresaDto> ValidateCreateEmpresaRequest(CreateEmpresaDto empresaDto)
         {

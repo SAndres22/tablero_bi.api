@@ -10,7 +10,6 @@ namespace tablero_bi.api.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-
         private readonly IUsuarioService _usuarioService;
         private readonly ITokenService _tokenService;
         public AuthController(IUsuarioService usuarioService, ITokenService tokenService)

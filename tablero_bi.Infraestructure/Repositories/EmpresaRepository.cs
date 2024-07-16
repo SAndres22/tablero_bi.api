@@ -83,6 +83,37 @@ namespace tablero_bi.Infraestructure.Repositories
 
         }
 
+        public async Task<IEnumerable<Empresas>> GetAllEmpresasAndSucursales()
+        {
+            const string query = @"
+        SELECT e.EmpresaId, e.NombreEmpresa, e.Nit, e.Email, e.Logo, e.FechaDeSistema, 
+               s.SucursalId, s.EmpresaId, s.NombreSucursal 
+        FROM Empresas e
+        LEFT JOIN Sucursales s ON e.EmpresaId = s.EmpresaId";
+
+            var empresaDic = new Dictionary<int, Empresas>();
+
+            var empresas = await _db.QueryAsync<Empresas, Sucursales, Empresas>(query, (empresa, sucursal) =>
+            {
+                if (!empresaDic.TryGetValue(empresa.EmpresaId, out var currentEmpresa))
+                {
+                    currentEmpresa = empresa;
+                    currentEmpresa.Sucursales = new List<Sucursales>();
+                    empresaDic.Add(currentEmpresa.EmpresaId, currentEmpresa);
+                }
+
+                if (sucursal != null && sucursal.SucursalId != 0)
+                {
+                    currentEmpresa.Sucursales.Add(sucursal);
+                }
+
+                return currentEmpresa;
+            }, splitOn: "SucursalId");
+
+            return empresas.Distinct().ToList();
+        }
+
+
         public async Task<IEnumerable<Empresas>> GetAllEmpresasAsync()
         {
             var query = @"SELECT Nit, NombreEmpresa, Logo,Email, FechaDeSistema FROM Empresas";

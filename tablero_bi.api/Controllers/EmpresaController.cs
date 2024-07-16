@@ -29,6 +29,15 @@ namespace tablero_bi.api.Controllers
                 : BadRequest();
         }
 
+        [HttpGet("GetEmpresasConSucursales")]
+        [Authorize(Policy = "RequireSuperUserRole")]
+        public async Task<IActionResult> GetEmpresasAllSucursales()
+        {
+            var result = await _empresaService.GetEmpresasAllSucursalesAsyn();
+            return result.IsSuccess
+                ? (IActionResult)Ok(result)
+                : BadRequest();
+        }
 
         [HttpGet("GetEmpresaByNit")]
         [Authorize(Policy = "RequireUserRole")]
@@ -70,7 +79,5 @@ namespace tablero_bi.api.Controllers
                 ?(IActionResult)Ok(result)
                 :BadRequest(result);
         }
-
-
     }
 }

@@ -5,6 +5,7 @@ namespace tablero_bi.Domain.Interfaces
     public interface IEmpresaRepository
     {
         Task<IEnumerable<Empresas>> GetAllEmpresasAsync();
+        Task<IEnumerable<Empresas>> GetAllEmpresasAndSucursales();
         Task<Empresas> GetEmpresaByNitAsync(string nit);
         Task<bool> CompanyExistsByNitAsync(string nitEmpresa);
         Task<bool> CompanyExistsByIdAsync(int id);

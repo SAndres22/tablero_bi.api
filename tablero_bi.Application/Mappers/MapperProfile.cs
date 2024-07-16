@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using tablero_bi.Application.DTOs.Empresas;
 using tablero_bi.Application.DTOs.Login;
+using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Domain.Entities;
 
 namespace tablero_bi.Application.Mappers
@@ -13,6 +14,7 @@ namespace tablero_bi.Application.Mappers
             CreateMap<Usuarios, LoginResponseDto>().ReverseMap();
             
             CreateMap<Empresas, EmpresaDto>().ReverseMap();
+            CreateMap<Sucursales, SucursalDto>().ReverseMap();
 
         }
     }
