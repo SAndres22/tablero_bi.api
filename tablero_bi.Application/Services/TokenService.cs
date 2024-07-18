@@ -25,19 +25,20 @@ namespace tablero_bi.Application.Services
 
         }
 
-        public string GenerateToken(string username, string role)
+        public string GenerateToken(string username, string role, string nitEmpresa)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             
             var now = DateTime.UtcNow.ToLocalTime();
             var expiration = now.AddMinutes(120);
-            
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Name, username),
                 new Claim(JwtRegisteredClaimNames.Aud, _config["Jwt:Audience"]),
                 new Claim(JwtRegisteredClaimNames.Iss, _config["Jwt:Issuer"]),
+                new Claim("nitEmpresa", nitEmpresa),
                 new Claim(ClaimTypes.Role, role),
             };
 
@@ -49,60 +50,9 @@ namespace tablero_bi.Application.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<bool> ValidateToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidIssuer = _config["Jwt:Issuer"],
-                ValidAudience = _config["Jwt:Audience"],
-            };
-
-            try
-            {
-                SecurityToken validatedToken;
-                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out validatedToken);
-
-                var isRevoked = await IsTokenRevoked(token);
-                if (isRevoked)
-                {
-                    return false; 
-                }
-
-                // Extraer reclamaciones del token validado
-                var jwtToken = validatedToken as JwtSecurityToken;
-                var username = jwtToken.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name)?.Value;
-                var role = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value;
-
-                var userFromDatabase = await _usuarioRepository.GetUserByUsername(username);
-
-                if (userFromDatabase != null && userFromDatabase.Roles.Name == role)
-                {
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return false;
-        }
-
         public async Task<Result<RevokedToken>> RevokeToken(string token)
         {
             if (string.IsNullOrEmpty(token))
-            {
-                return new Result<RevokedToken>().Failed(new List<string> { "Token no valido" });
-            }
-
-            var tokenValido = await ValidateToken(token);
-            if (!tokenValido)
             {
                 return new Result<RevokedToken>().Failed(new List<string> { "Token no valido" });
             }
@@ -128,9 +78,9 @@ namespace tablero_bi.Application.Services
 
         }
 
-        public async Task<bool> IsTokenRevoked(string token)
+        public async Task<bool> IsTokenRevoked()
         {
-            return await _tokenRepository.IsTokenRevoked(token);
+            return await _tokenRepository.IsTokenRevoked();
         }
 
         public async Task CleanExpiredTokens()

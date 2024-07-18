@@ -33,7 +33,7 @@ namespace tablero_bi.api.Controllers
         [Authorize(Policy = "RequireSuperUserRole")]
         public async Task<IActionResult> GetEmpresasAllSucursales()
         {
-            var result = await _empresaService.GetEmpresasAllSucursalesAsyn();
+            var result = await _empresaService.GetEmpresasAllSucursalesAsync();
             return result.IsSuccess
                 ? (IActionResult)Ok(result)
                 : BadRequest();

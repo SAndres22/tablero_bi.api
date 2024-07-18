@@ -64,22 +64,22 @@ namespace tablero_bi.Infraestructure.Repositories
         public async Task<Usuarios> GetUserByUsername(string username)
         {
             var sql = @"
-                SELECT u.Username, r.Name
+                SELECT u.Username, r.Name, e.Nit
                 FROM usuarios u
                 INNER JOIN Roles r ON u.RoleId = r.RoleId
+                INNER JOIN Empresas e ON u.EmpresaId = e.EmpresaId
                 WHERE u.Username = @Username";
 
-            // Reemplaza con tu cadena de conexión
-
-            var result = await _db.QueryAsync<Usuarios, Roles, Usuarios>(
-                sql,
-                (usuario, role) =>
-                {
-                    usuario.Roles = role; // Asigna el rol directamente al usuario
-                    return usuario;
-                },
-                new { Username = username },
-                splitOn: "Name");
+            var result = await _db.QueryAsync<Usuarios, Roles, Empresas, Usuarios>(
+        sql,
+        (usuario, role, empresa) =>
+        {
+            usuario.Roles = role; // Asigna el rol directamente al usuario
+            usuario.Empresas = empresa; // Asigna la empresa directamente al usuario
+            return usuario;
+        },
+        new { Username = username },
+        splitOn: "Name,Nit");
 
             return result.FirstOrDefault();
 

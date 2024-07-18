@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Dapper;
+﻿using Dapper;
 using System.Data;
 using tablero_bi.Domain.Entities;
 using tablero_bi.Domain.Interfaces;
@@ -25,6 +24,17 @@ namespace tablero_bi.Infraestructure.Repositories
             });
 
             return count > 0;
+        }
+
+        public async Task<IEnumerable<Sucursales>> GetSucursalesAsync(string nitEmpresa)
+        {
+            var query = @"SELECT DISTINCT s.SucursalId,s.NombreSucursal, s.EmpresaId
+                        FROM Sucursales s
+                        INNER JOIN Empresas e ON s.EmpresaId = e.EmpresaId
+                        WHERE e.Nit = @NitEmpresa";
+
+            var listaSucrsales = await _db.QueryAsync<Sucursales>(query, new {NitEmpresa =  nitEmpresa});
+            return listaSucrsales.ToList();
         }
     }
 }

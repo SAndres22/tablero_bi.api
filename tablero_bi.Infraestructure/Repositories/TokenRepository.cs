@@ -31,6 +31,11 @@ namespace tablero_bi.Infraestructure.Repositories
             var now = DateTime.UtcNow.ToLocalTime();
             await _db.ExecuteAsync("DELETE FROM RevokedTokens WHERE Expiration < @Now", new { Now = now });
         }
+
+        public Task<bool> IsTokenRevoked()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

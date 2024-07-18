@@ -19,13 +19,6 @@ namespace tablero_bi.api.Controllers
         [HttpGet("IsSuperUser")]
         public async Task<IActionResult> AdminEndpoint()
         {
-            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-            var tokenValido = await _tokenService.ValidateToken(token);
-            if (!tokenValido)
-            {
-                return BadRequest("Ud no es un SuperUsuario");
-            }
             return Ok("This is an SuperUser endpoint");
         }
 
@@ -33,19 +26,8 @@ namespace tablero_bi.api.Controllers
         [HttpDelete("DeleteTokenExpiredBD")]
         public async Task<IActionResult> DeleteTokensDB()
         {
-            var result = await AdminEndpoint();
-
-            if (result is OkObjectResult)
-            {
-                await _tokenService.CleanExpiredTokens();
-                return Ok("Tokens eliminados correctamente");
-            }
-            else
-            {
-                return result;
-            }
+            await _tokenService.CleanExpiredTokens();
+            return Ok("Tokens eliminados correctamente");
         }
-
-
     }
 }

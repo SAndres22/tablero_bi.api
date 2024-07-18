@@ -5,10 +5,9 @@ namespace tablero_bi.Application.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateToken(string username, string role);
-        Task<bool> ValidateToken(string token);
+        string GenerateToken(string username, string role, string nitEmpresa);
         Task<Result<RevokedToken>> RevokeToken(string token);
-        Task<bool> IsTokenRevoked(string token);
+        Task<bool> IsTokenRevoked();
         Task CleanExpiredTokens();
 
     }

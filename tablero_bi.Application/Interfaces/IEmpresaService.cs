@@ -7,7 +7,7 @@ namespace tablero_bi.Application.Interfaces
     {
         Task<Result<EmpresaDto>> GetEmpresaByNitAsync(string nitEmpresa);
         Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAsync();
-        Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAllSucursalesAsyn();
+        Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAllSucursalesAsync();
         Task<Result<CreateEmpresaDto>> CreateEmpresaAsync(CreateEmpresaDto empresaDto);
         Task<Result<UpdateEmpresaDto>> EditEmpresaAsync(UpdateEmpresaDto empresaDto);
         Task<Result<bool>> DeleteEmpresaAsync (string nitEmpresa);

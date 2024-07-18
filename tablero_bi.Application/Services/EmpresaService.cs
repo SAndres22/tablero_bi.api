@@ -139,7 +139,7 @@ namespace tablero_bi.Application.Services
             return new Result<EmpresaDto>().Success(empresa, new List<string> { "Empresa encontrada" });
         }
 
-        public async Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAllSucursalesAsyn()
+        public async Task<Result<IEnumerable<EmpresaDto>>> GetEmpresasAllSucursalesAsync()
         {
             var listEmpresas = await _empresaRepository.GetAllEmpresasAndSucursales();
             if (listEmpresas == null || !listEmpresas.Any())
@@ -164,8 +164,6 @@ namespace tablero_bi.Application.Services
 
             return new Result<IEnumerable<EmpresaDto>>().Success(listEmpresasDto, new List<string> { "Listado de Empresas encontrado" });
         }
-
-        
 
         private Result<CreateEmpresaDto> ValidateCreateEmpresaRequest(CreateEmpresaDto empresaDto)
         {

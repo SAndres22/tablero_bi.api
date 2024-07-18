@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using tablero_bi.api.Attributes;
 using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Application.Interfaces;
 
@@ -13,9 +14,20 @@ namespace tablero_bi.api.Controllers
     {
         private readonly ISucursalService _sucursalService;
 
-        public SucursalesController(ISucursalService sucursalService) 
+        public SucursalesController(ISucursalService sucursalService)
         {
             _sucursalService = sucursalService;
+        }
+
+        [Authorize(Policy = "RequireAdminRole")]
+        [CheckEmpresa]
+        [HttpGet("GetSucursales")]
+        public async Task<IActionResult> GetSucursales(string nitEmpresa)
+        {
+            var result = await _sucursalService.GetSucursalesAsync(nitEmpresa);
+            return result.IsSuccess 
+                ? (IActionResult)Ok(result) 
+                : BadRequest(result);
         }
 
 

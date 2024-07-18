@@ -7,7 +7,7 @@ namespace tablero_bi.api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class AuthController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -35,7 +35,7 @@ namespace tablero_bi.api.Controllers
 
             var result = await _tokenService.RevokeToken(token);
             return result.IsSuccess
-                ?(IActionResult)Ok(result.message) : BadRequest(result.message);
+                ? (IActionResult)Ok(result.message) : BadRequest(result.message);
         }
     }
 }

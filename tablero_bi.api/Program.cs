@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.FileProviders;
+using tablero_bi.api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,6 +102,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<TokenValidationMiddleware>();
 
 app.UseStaticFiles(new StaticFileOptions
 {

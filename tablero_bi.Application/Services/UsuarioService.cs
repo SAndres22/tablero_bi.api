@@ -57,17 +57,17 @@ namespace tablero_bi.Application.Services
 
             var loginResponseDto = new LoginResponseDto
             {
-                Token = _tokenService.GenerateToken(usuarioFromRepo.Username, usuarioFromRepo.Roles.Name),
+                Token = _tokenService.GenerateToken(usuarioFromRepo.Username, usuarioFromRepo.Roles.Name, loginRequest.NitEmpresa),
                 Username = usuarioFromRepo.Username,
                 NitEmpresa = usuarioFromRepo.Empresas.Nit,
                 Role = usuarioFromRepo.Roles.Name,
             };
 
-            var validar = await _tokenService.ValidateToken(loginResponseDto.Token);
-            if(validar == false)
-            {
-                return new Result<LoginResponseDto>().Failed(new List<string> { "EL token no es seguro" });
-            }
+            //var validar = await _tokenService.ValidateToken(loginResponseDto.Token);
+            //if(validar == false)
+            //{
+            //    return new Result<LoginResponseDto>().Failed(new List<string> { "EL token no es seguro" });
+            //}
 
             var usuarioDto = _mapper.Map<LoginResponseDto>(loginResponseDto);
             return new Result<LoginResponseDto>().Success(usuarioDto, new List<string> { "Sesion iniciada exitosamente"});

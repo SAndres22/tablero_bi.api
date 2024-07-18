@@ -1,4 +1,5 @@
-﻿using tablero_bi.Application.Common;
+﻿using AutoMapper;
+using tablero_bi.Application.Common;
 using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Application.Interfaces;
 using tablero_bi.Domain.Entities;
@@ -11,11 +12,14 @@ namespace tablero_bi.Application.Services
 
         private readonly ISucursalRepository _sucursalRepository;
         private readonly IEmpresaRepository _empresaRepository;
+        private readonly IMapper _mapper;
 
-        public SucursalService(ISucursalRepository sucursalRepository, IEmpresaRepository empresaRepository)
+        public SucursalService(ISucursalRepository sucursalRepository, IEmpresaRepository empresaRepository,
+            IMapper mapper)
         {
             _sucursalRepository = sucursalRepository;
             _empresaRepository = empresaRepository;
+            _mapper = mapper;
         }
 
         public async Task<Result<CreateSucursalDto>> CreateNewSucursalAsync(CreateSucursalDto sucursalDto)
@@ -47,6 +51,29 @@ namespace tablero_bi.Application.Services
 
         }
 
+        public async Task<Result<IEnumerable<SucursalDto>>> GetSucursalesAsync(string nitEmpresa)
+        {
+            if (string.IsNullOrWhiteSpace(nitEmpresa))
+            { 
+                return new Result<IEnumerable<SucursalDto>>().Failed(new List<string> { "El campo no puede estar vacio" });
+            }
+
+            var empresaExiste = await _empresaRepository.CompanyExistsByNitAsync(nitEmpresa);
+            if (!empresaExiste)
+            {
+                return new Result<IEnumerable<SucursalDto>>().Failed(new List<string> { "Error la empresa no existe." });
+            }
+
+            var listSucursales = await _sucursalRepository.GetSucursalesAsync(nitEmpresa);
+
+            var listSucursalesDto = _mapper.Map<IEnumerable<SucursalDto>>(listSucursales);
+            if(listSucursales == null || !listSucursales.Any())
+            {
+                return new Result<IEnumerable<SucursalDto>>().Success(listSucursalesDto, new List<string> { " No hay sucursales para la empresa" });
+            }
+
+            return new Result<IEnumerable<SucursalDto>>().Success(listSucursalesDto, new List<string> { " Sucursales encontradas" });
+        }
 
         private Result<CreateSucursalDto> ValidateCreateSucursalRequest(CreateSucursalDto sucursalDto)
         {
@@ -58,6 +85,8 @@ namespace tablero_bi.Application.Services
 
             return new Result<CreateSucursalDto>().Success(null);
         }
+
+        
 
     }
 }
