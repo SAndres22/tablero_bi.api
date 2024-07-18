@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using tablero_bi.api.Attributes;
 using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Application.Interfaces;
+using tablero_bi.Application.Services;
 
 namespace tablero_bi.api.Controllers
 {
 
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "RequireAdminRole")]
+    [CheckEmpresa]
     public class SucursalesController : ControllerBase
     {
         private readonly ISucursalService _sucursalService;
@@ -19,8 +21,6 @@ namespace tablero_bi.api.Controllers
             _sucursalService = sucursalService;
         }
 
-        [Authorize(Policy = "RequireAdminRole")]
-        [CheckEmpresa]
         [HttpGet("GetSucursales")]
         public async Task<IActionResult> GetSucursales(string nitEmpresa)
         {
@@ -30,10 +30,18 @@ namespace tablero_bi.api.Controllers
                 : BadRequest(result);
         }
 
+        [HttpGet("GetSucursalById")]
+        public async Task<IActionResult> GetSucursalById([FromQuery] string nitEmpresa, int idSucursal)
+        {
+            var result = await _sucursalService.GetSucursalByIdAsync(idSucursal, nitEmpresa);
+            return result.IsSuccess
+                ? (IActionResult)Ok(result)
+                : BadRequest(result);
+        }
 
-        [Authorize(Policy = "RequireAdminRole")]
+
         [HttpPost("CreateNewSucursal")]
-        public async Task<IActionResult> CreateNewSucursal(CreateSucursalDto sucursalDto)
+        public async Task<IActionResult> CreateNewSucursal([FromForm]CreateSucursalDto sucursalDto, [FromQuery] string nitEmpresa)
         {
             var result = await _sucursalService.CreateNewSucursalAsync(sucursalDto);
             return result.IsSuccess

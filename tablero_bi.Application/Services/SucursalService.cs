@@ -51,6 +51,18 @@ namespace tablero_bi.Application.Services
 
         }
 
+        public async Task<Result<SucursalDto>> GetSucursalByIdAsync(int id, string nit)
+        {
+            var sucursal = await _sucursalRepository.GetSucursalByIdAsync(id);
+            if(sucursal == null)
+            {
+                return new Result<SucursalDto>().Failed(new List<string> { "No existe la Sucursal" });
+            }
+
+            var sucursalDto = _mapper.Map<SucursalDto>(sucursal);
+            return new Result<SucursalDto>().Success(sucursalDto, new List<string> { "Se encontro la Sucursal" });
+        }
+
         public async Task<Result<IEnumerable<SucursalDto>>> GetSucursalesAsync(string nitEmpresa)
         {
             if (string.IsNullOrWhiteSpace(nitEmpresa))

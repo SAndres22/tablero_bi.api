@@ -3,7 +3,7 @@ using tablero_bi.Application.Services;
 
 namespace tablero_bi.api.Extensions
 {
-    public static class ServiceExtensions
+    public static class LoggerServiceExtensions
     {
         public static void ConfigureLoggerService(this IServiceCollection services)
         {

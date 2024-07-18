@@ -26,6 +26,14 @@ namespace tablero_bi.Infraestructure.Repositories
             return count > 0;
         }
 
+        public async Task<Sucursales> GetSucursalByIdAsync(int id)
+        {
+            var query = @"SELECT * FROM Sucursales WHERE SucursalId = @Id";
+            var sucursal = await _db.QueryFirstAsync<Sucursales>(query, new { Id = id });
+            return sucursal;
+
+        }
+
         public async Task<IEnumerable<Sucursales>> GetSucursalesAsync(string nitEmpresa)
         {
             var query = @"SELECT DISTINCT s.SucursalId,s.NombreSucursal, s.EmpresaId
@@ -35,6 +43,21 @@ namespace tablero_bi.Infraestructure.Repositories
 
             var listaSucrsales = await _db.QueryAsync<Sucursales>(query, new {NitEmpresa =  nitEmpresa});
             return listaSucrsales.ToList();
+        }
+
+        public async Task<bool> SucursalAsociadaAEmpresaAsync(string nitEmpresa, int idsucursal)
+        {
+            var query = @"SELECT COUNT(1)
+                FROM Sucursales S
+                INNER JOIN Empresas E ON S.EmpresaId = E.EmpresaId
+                WHERE E.Nit = @NitEmpresa
+                AND S.SucursalId = @IdSucursal";
+
+            var count = await _db.ExecuteScalarAsync<int>(query, new { 
+                NitEmpresa = nitEmpresa, IdSucursal = idsucursal 
+            });
+
+            return count > 0;
         }
     }
 }

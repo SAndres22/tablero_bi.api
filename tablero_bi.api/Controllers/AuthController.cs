@@ -7,7 +7,6 @@ namespace tablero_bi.api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-
     public class AuthController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -29,6 +28,7 @@ namespace tablero_bi.api.Controllers
         }
 
         [HttpPost("CerrarSesion")]
+        [Authorize(Policy = "USER")]
         public async Task<IActionResult> Logout()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

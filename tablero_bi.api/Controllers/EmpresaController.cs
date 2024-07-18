@@ -7,10 +7,8 @@ namespace tablero_bi.api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize]
     public class EmpresaController : ControllerBase
     {
-
         private readonly IEmpresaService _empresaService;
 
         public EmpresaController(IEmpresaService empresaService)
