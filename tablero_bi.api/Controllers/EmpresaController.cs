@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using tablero_bi.api.Attributes;
 using tablero_bi.Application.DTOs.Empresas;
 using tablero_bi.Application.Interfaces;
 
@@ -15,7 +16,6 @@ namespace tablero_bi.api.Controllers
         {
             _empresaService = empresaService;
         }
-
 
         [HttpGet("GetEmpresas")]
         [Authorize(Policy = "RequireSuperUserRole")]
@@ -38,6 +38,7 @@ namespace tablero_bi.api.Controllers
         }
 
         [HttpGet("GetEmpresaByNit")]
+        [CheckEmpresa]
         [Authorize(Policy = "RequireUserRole")]
         public async Task<IActionResult> GetEmpresaByNit(string nitEmpresa)
         {
@@ -59,7 +60,8 @@ namespace tablero_bi.api.Controllers
 
         [HttpPut("EditEmpresa")]
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> EditEmpresa([FromForm]UpdateEmpresaDto empresaDto)
+        [CheckEmpresa]
+        public async Task<IActionResult> EditEmpresa([FromForm]UpdateEmpresaDto empresaDto, [FromQuery] string nitEmpresa)
         {
             var result = await _empresaService.EditEmpresaAsync(empresaDto);
 
@@ -70,7 +72,7 @@ namespace tablero_bi.api.Controllers
 
         [HttpDelete("DeleteEmpresa")]
         [Authorize(Policy = "RequireSuperUserRole")]
-        public async Task<IActionResult> DeleteEmpresa(string nitEmpresa)
+        public async Task<IActionResult> DeleteEmpresa([FromQuery] string nitEmpresa)
         {
             var result = await _empresaService.DeleteEmpresaAsync(nitEmpresa);
             return result.IsSuccess

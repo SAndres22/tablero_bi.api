@@ -26,10 +26,27 @@ namespace tablero_bi.Infraestructure.Repositories
             return count > 0;
         }
 
+        public async Task<bool> GetSucursalAsociadaToEmpresaAsync(int empresaId, string nitEmpresa)
+        {
+            var query = @"SELECT COUNT(1)
+                FROM Sucursales S
+                INNER JOIN Empresas E ON S.EmpresaId = E.EmpresaId
+                WHERE S.EmpresaId = @EmpresaId
+                AND E.Nit = @NitEmpresa";
+
+            var count = await _db.ExecuteScalarAsync<int>(query, new
+            {
+                EmpresaId = empresaId,
+                NitEmpresa = nitEmpresa            
+            });
+
+            return count > 0;
+        }
+
         public async Task<Sucursales> GetSucursalByIdAsync(int id)
         {
             var query = @"SELECT * FROM Sucursales WHERE SucursalId = @Id";
-            var sucursal = await _db.QueryFirstAsync<Sucursales>(query, new { Id = id });
+            var sucursal = await _db.QuerySingleOrDefaultAsync<Sucursales>(query, new { Id = id });
             return sucursal;
 
         }
@@ -45,19 +62,5 @@ namespace tablero_bi.Infraestructure.Repositories
             return listaSucrsales.ToList();
         }
 
-        public async Task<bool> SucursalAsociadaAEmpresaAsync(string nitEmpresa, int idsucursal)
-        {
-            var query = @"SELECT COUNT(1)
-                FROM Sucursales S
-                INNER JOIN Empresas E ON S.EmpresaId = E.EmpresaId
-                WHERE E.Nit = @NitEmpresa
-                AND S.SucursalId = @IdSucursal";
-
-            var count = await _db.ExecuteScalarAsync<int>(query, new { 
-                NitEmpresa = nitEmpresa, IdSucursal = idsucursal 
-            });
-
-            return count > 0;
-        }
     }
 }

@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using tablero_bi.api.Attributes;
 using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Application.Interfaces;
-using tablero_bi.Application.Services;
 
 namespace tablero_bi.api.Controllers
 {
-
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Policy = "RequireAdminRole")]
-    [CheckEmpresa]
     public class SucursalesController : ControllerBase
     {
         private readonly ISucursalService _sucursalService;
@@ -21,8 +18,9 @@ namespace tablero_bi.api.Controllers
             _sucursalService = sucursalService;
         }
 
-        [HttpGet("GetSucursales")]
-        public async Task<IActionResult> GetSucursales(string nitEmpresa)
+        [HttpGet("GetAllSucursales")]
+        [CheckEmpresa]
+        public async Task<IActionResult> GetAllSucursales([FromQuery]string nitEmpresa)
         {
             var result = await _sucursalService.GetSucursalesAsync(nitEmpresa);
             return result.IsSuccess 
@@ -31,7 +29,8 @@ namespace tablero_bi.api.Controllers
         }
 
         [HttpGet("GetSucursalById")]
-        public async Task<IActionResult> GetSucursalById([FromQuery] string nitEmpresa, int idSucursal)
+        [CheckEmpresa]
+        public async Task<IActionResult> GetSucursalById(int idSucursal, [FromQuery] string nitEmpresa)
         {
             var result = await _sucursalService.GetSucursalByIdAsync(idSucursal, nitEmpresa);
             return result.IsSuccess
@@ -48,6 +47,11 @@ namespace tablero_bi.api.Controllers
                 ? (IActionResult)Ok(result)
                 : BadRequest(result);
         }
+
+        //[HttpPut("EditSucursal")]
+        //public async Task<IActionResult> EditSucursal([FromForm] UpdateSucursalDto sucursalDto)
+
+
 
     }
 }

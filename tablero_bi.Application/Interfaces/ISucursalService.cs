@@ -7,7 +7,8 @@ namespace tablero_bi.Application.Interfaces
     {
         Task<Result<CreateSucursalDto>> CreateNewSucursalAsync(CreateSucursalDto sucursalDto);
         Task<Result<IEnumerable<SucursalDto>>> GetSucursalesAsync(string nitEmpresa);
-        Task<Result<SucursalDto>> GetSucursalByIdAsync(int id, string nitEmpresa);
+        Task<Result<SucursalDto>> GetSucursalByIdAsync(int idSucursal, string nitEmpresa);
+        
 
     }
 }

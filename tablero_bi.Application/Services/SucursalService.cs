@@ -51,12 +51,18 @@ namespace tablero_bi.Application.Services
 
         }
 
-        public async Task<Result<SucursalDto>> GetSucursalByIdAsync(int id, string nit)
+        public async Task<Result<SucursalDto>> GetSucursalByIdAsync(int idSucursal, string nitEmpresa)
         {
-            var sucursal = await _sucursalRepository.GetSucursalByIdAsync(id);
+            var sucursal = await _sucursalRepository.GetSucursalByIdAsync(idSucursal);
             if(sucursal == null)
             {
                 return new Result<SucursalDto>().Failed(new List<string> { "No existe la Sucursal" });
+            }
+
+            var sucursalAsociada = await _sucursalRepository.GetSucursalAsociadaToEmpresaAsync(sucursal.EmpresaId, nitEmpresa);
+            if (!sucursalAsociada)
+            {
+                return new Result<SucursalDto>().Failed(new List<string> { "Sin permisos"});
             }
 
             var sucursalDto = _mapper.Map<SucursalDto>(sucursal);
@@ -97,8 +103,6 @@ namespace tablero_bi.Application.Services
 
             return new Result<CreateSucursalDto>().Success(null);
         }
-
-        
 
     }
 }

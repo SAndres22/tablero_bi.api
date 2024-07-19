@@ -7,6 +7,6 @@ namespace tablero_bi.Domain.Interfaces
         Task<Sucursales> GetSucursalByIdAsync(int id);
         Task<bool> CreateNewSucursalAsync(Sucursales sucursal);
         Task<IEnumerable<Sucursales>> GetSucursalesAsync(string nitEmpresa);
-        Task<bool> SucursalAsociadaAEmpresaAsync(string nitEmpresa, int idsucursal);
+        Task<bool> GetSucursalAsociadaToEmpresaAsync(int empresaId, string nitEmpresa);
     }
 }
