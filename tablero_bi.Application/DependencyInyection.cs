@@ -20,10 +20,6 @@ namespace tablero_bi.Application
             services.AddTransient<ISucursalService, SucursalService>();
             services.AddTransient<IImagenService, ImagenService>();
 
-
-
-
-
             return services;
         }
     }

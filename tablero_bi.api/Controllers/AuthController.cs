@@ -28,7 +28,7 @@ namespace tablero_bi.api.Controllers
         }
 
         [HttpPost("CerrarSesion")]
-        [Authorize(Policy = "USER")]
+        [Authorize(Policy = "RequireUserRole")]
         public async Task<IActionResult> Logout()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

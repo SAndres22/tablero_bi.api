@@ -38,11 +38,11 @@ namespace tablero_bi.api.Controllers
                 : BadRequest(result);
         }
 
-
         [HttpPost("CreateNewSucursal")]
+        [CheckEmpresa]
         public async Task<IActionResult> CreateNewSucursal([FromForm]CreateSucursalDto sucursalDto, [FromQuery] string nitEmpresa)
         {
-            var result = await _sucursalService.CreateNewSucursalAsync(sucursalDto);
+            var result = await _sucursalService.CreateNewSucursalAsync(sucursalDto,nitEmpresa);
             return result.IsSuccess
                 ? (IActionResult)Ok(result)
                 : BadRequest(result);

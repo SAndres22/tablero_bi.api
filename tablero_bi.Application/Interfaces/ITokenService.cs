@@ -7,7 +7,7 @@ namespace tablero_bi.Application.Interfaces
     {
         string GenerateToken(string username, string role, string nitEmpresa);
         Task<Result<RevokedToken>> RevokeToken(string token);
-        Task<bool> IsTokenRevoked();
+        Task<bool> IsTokenRevoked(string token);
         Task CleanExpiredTokens();
 
     }

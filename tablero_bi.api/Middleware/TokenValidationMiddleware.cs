@@ -14,7 +14,8 @@ namespace tablero_bi.api.Middleware
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger<TokenValidationMiddleware> _logger;
 
-        public TokenValidationMiddleware(RequestDelegate next, IConfiguration config, IServiceScopeFactory serviceScopeFactory, ILogger<TokenValidationMiddleware> logger)
+        public TokenValidationMiddleware(RequestDelegate next, IConfiguration config, IServiceScopeFactory serviceScopeFactory, 
+            ILogger<TokenValidationMiddleware> logger)
         {
             _next = next;
             _config = config;
@@ -51,6 +52,7 @@ namespace tablero_bi.api.Middleware
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var userRepository = scope.ServiceProvider.GetRequiredService<IUsuarioRepository>();
+                var tokenRepository = scope.ServiceProvider.GetRequiredService<ITokenRepository>();
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
@@ -66,6 +68,13 @@ namespace tablero_bi.api.Middleware
 
                 try
                 {
+                    var tokenRevocado = await tokenRepository.IsTokenRevoked(token);
+                     
+                    if(tokenRevocado == true)
+                    {
+                        return false;
+                    }
+
                     SecurityToken validatedToken;
                     var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out validatedToken);
 

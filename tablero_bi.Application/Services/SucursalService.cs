@@ -22,7 +22,7 @@ namespace tablero_bi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<CreateSucursalDto>> CreateNewSucursalAsync(CreateSucursalDto sucursalDto)
+        public async Task<Result<CreateSucursalDto>> CreateNewSucursalAsync(CreateSucursalDto sucursalDto, string nitEmpresa)
         {
             var validationResult = ValidateCreateSucursalRequest(sucursalDto);
             if (!validationResult.IsSuccess)
@@ -40,6 +40,12 @@ namespace tablero_bi.Application.Services
                 NombreSucursal = sucursalDto.NombreSucursal,
                 EmpresaId = sucursalDto.EmpresaId,
             };
+
+            var sucursalAsociada = await _sucursalRepository.GetSucursalAsociadaToEmpresaAsync(newSucursal.EmpresaId, nitEmpresa);
+            if (!sucursalAsociada)
+            {
+                return new Result<CreateSucursalDto>().Failed(new List<string> { "Sin permisos" });
+            }
 
             var sucursalCreada = await _sucursalRepository.CreateNewSucursalAsync(newSucursal);
             if (!sucursalCreada)

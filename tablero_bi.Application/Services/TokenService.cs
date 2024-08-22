@@ -13,14 +13,12 @@ namespace tablero_bi.Application.Services
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _config;
-        private readonly IUsuarioRepository _usuarioRepository;
         private readonly ITokenRepository _tokenRepository;
 
         public TokenService(IConfiguration configuration, IUsuarioRepository usuarioRepository,
             ITokenRepository tokenRepository)
         {
             _config = configuration;
-            _usuarioRepository = usuarioRepository;
             _tokenRepository = tokenRepository;
 
         }
@@ -78,9 +76,9 @@ namespace tablero_bi.Application.Services
 
         }
 
-        public async Task<bool> IsTokenRevoked()
+        public async Task<bool> IsTokenRevoked(string token)
         {
-            return await _tokenRepository.IsTokenRevoked();
+            return await _tokenRepository.IsTokenRevoked(token);
         }
 
         public async Task CleanExpiredTokens()
