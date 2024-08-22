@@ -45,6 +45,7 @@ namespace tablero_bi.api.Middleware
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 await context.Response.WriteAsync("Token validation failed.");
             }
+
         }
 
         private async Task<bool> ValidateToken(string token)
