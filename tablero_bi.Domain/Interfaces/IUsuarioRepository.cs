@@ -4,7 +4,7 @@ namespace tablero_bi.Domain.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<Usuarios> GetLoginUserAsync(string nitEmpresa, string username, string passwordHash);
+        Task<Usuarios> GetLoginUserAsync(Usuarios usuario);
         Task<Usuarios> GetUserByUsername(string username);
     }
 }
