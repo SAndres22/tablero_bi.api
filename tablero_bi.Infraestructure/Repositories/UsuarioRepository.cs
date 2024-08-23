@@ -13,7 +13,7 @@ namespace tablero_bi.Infraestructure.Repositories
             _db = db;
         }
 
-        public async Task<Usuarios> GetLoginUserAsync(string nitEmpresa, string username, string passwordHash)
+        public async Task<Usuarios> GetLoginUserAsync(Usuarios usuario)
         {
             var sql = @"
         SELECT 
@@ -54,7 +54,7 @@ namespace tablero_bi.Infraestructure.Repositories
                     }
                     return userEntry;
                 },
-                new { Username = username, Password = passwordHash, Nit = nitEmpresa },
+                new { Username = usuario.Username, Password = usuario.Password, Nit = usuario.Empresas.Nit },
                 splitOn: "RoleId,EmpresaId",
                 commandType: CommandType.Text); // Cambia a CommandType.StoredProcedure si es un procedimiento almacenado
 

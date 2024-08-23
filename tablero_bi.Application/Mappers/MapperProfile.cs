@@ -10,9 +10,22 @@ namespace tablero_bi.Application.Mappers
     {
         public MapperProfile()
         {
-            CreateMap<LoginRequestDto, Usuarios>().ReverseMap();
-            CreateMap<Usuarios, LoginResponseDto>().ReverseMap();
-            
+
+            CreateMap<LoginRequestDto, Usuarios>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
+            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password))
+            .ForPath(dest => dest.Empresas.Nit, opt => opt.MapFrom(src => src.NitEmpresa))
+            .ReverseMap();
+
+
+            CreateMap<Usuarios, LoginResponseDto>()
+            .ForMember(dest => dest.Token, opt => opt.Ignore()) // Ignora inicialmente el token
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))
+            .ForMember(dest => dest.NitEmpresa, opt => opt.MapFrom(src => src.Empresas.Nit))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Roles.Name)).ReverseMap();
+
+
+
             CreateMap<Empresas, EmpresaDto>().ReverseMap();
             CreateMap<Sucursales, SucursalDto>().ReverseMap();
 
