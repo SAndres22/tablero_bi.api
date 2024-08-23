@@ -1,19 +1,31 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace tablero_bi.Application.DTOs.Login
 {
     public class LoginRequestDto
     {
-        [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
-        [StringLength(50, ErrorMessage = "El nombre de usuario no puede tener más de 50 caracteres.")]
         public string Username { get; set; }
-
-        [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        [StringLength(100, ErrorMessage = "La contraseña no puede tener más de 100 caracteres.")]
         public string Password { get; set; }
-
-        [Required(ErrorMessage = "El NIT de la empresa es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El NIT de la empresa no puede tener más de 20 caracteres.")]
         public string NitEmpresa { get; set; }
     }
+
+
+    public class LoginRequestValidator : AbstractValidator<LoginRequestDto>
+    {
+        public LoginRequestValidator()
+        {
+            RuleFor(x => x.Username)
+                .NotEmpty().WithMessage("El nombre de usuario es obligatorio.")
+                .MaximumLength(50).WithMessage("El nombre de usuario no puede tener más de 50 caracteres.");
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("La contraseña es obligatoria.")
+                .MaximumLength(100).WithMessage("La contraseña no puede tener más de 100 caracteres.");
+
+            RuleFor(x => x.NitEmpresa)
+                .NotEmpty().WithMessage("El NIT de la empresa es obligatorio.")
+                .MaximumLength(20).WithMessage("El NIT de la empresa no puede tener más de 20 caracteres.");
+        }
+    }
+
 }

@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Attributes\" />
     <Folder Include="Images\" />
     <Folder Include="Images\Logos\" />
   </ItemGroup>
