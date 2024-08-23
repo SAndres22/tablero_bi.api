@@ -29,10 +29,16 @@ namespace tablero_bi.Application.Services
 
         public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
         {
-            var validationResult = ValidateLoginRequest(loginRequest);
-            if (!validationResult.IsSuccess)
+            var validator = new LoginRequestValidator();
+            var validationResult = validator.Validate(loginRequest);
+
+            if (!validationResult.IsValid)
             {
-                return validationResult;
+                var validationErrors = validationResult.Errors
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return new Result<LoginResponseDto>().Failed(validationErrors);
             }
 
             var companyExists = await _empresaRepository.CompanyExistsByNitAsync(loginRequest.NitEmpresa);
@@ -63,26 +69,9 @@ namespace tablero_bi.Application.Services
                 Role = usuarioFromRepo.Roles.Name,
             };
 
-            //var validar = await _tokenService.ValidateToken(loginResponseDto.Token);
-            //if(validar == false)
-            //{
-            //    return new Result<LoginResponseDto>().Failed(new List<string> { "EL token no es seguro" });
-            //}
-
             var usuarioDto = _mapper.Map<LoginResponseDto>(loginResponseDto);
             return new Result<LoginResponseDto>().Success(usuarioDto, new List<string> { "Sesion iniciada exitosamente"});
         }
 
-        private Result<LoginResponseDto> ValidateLoginRequest(LoginRequestDto loginRequest)
-        {
-            if (string.IsNullOrWhiteSpace(loginRequest.Username) ||
-                string.IsNullOrWhiteSpace(loginRequest.Password) ||
-                string.IsNullOrWhiteSpace(loginRequest.NitEmpresa))
-            {
-                return new Result<LoginResponseDto>().Failed(new List<string> { "Los campos no pueden estar vacios" });
-            }
-
-            return new Result<LoginResponseDto>().Success(null);
-        }
     }
 }

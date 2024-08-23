@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using tablero_bi.api.Attributes;
 using tablero_bi.Application.DTOs.Sucursales;
 using tablero_bi.Application.Interfaces;
 
@@ -12,40 +11,55 @@ namespace tablero_bi.api.Controllers
     public class SucursalesController : ControllerBase
     {
         private readonly ISucursalService _sucursalService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public SucursalesController(ISucursalService sucursalService)
+        public SucursalesController(ISucursalService sucursalService, IAuthorizationService authorizationService)
         {
             _sucursalService = sucursalService;
+            _authorizationService = authorizationService;
+
         }
 
         [HttpGet("GetAllSucursales")]
-        [CheckEmpresa]
         public async Task<IActionResult> GetAllSucursales([FromQuery]string nitEmpresa)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, nitEmpresa, "CheckEmpresaPolicy");
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var result = await _sucursalService.GetSucursalesAsync(nitEmpresa);
-            return result.IsSuccess 
-                ? (IActionResult)Ok(result) 
-                : BadRequest(result);
+            return result.IsSuccess ? (IActionResult)Ok(result) : BadRequest(result);
         }
 
         [HttpGet("GetSucursalById")]
-        [CheckEmpresa]
         public async Task<IActionResult> GetSucursalById(int idSucursal, [FromQuery] string nitEmpresa)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, nitEmpresa, "CheckEmpresaPolicy");
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var result = await _sucursalService.GetSucursalByIdAsync(idSucursal, nitEmpresa);
-            return result.IsSuccess
-                ? (IActionResult)Ok(result)
-                : BadRequest(result);
+            return result.IsSuccess ? (IActionResult)Ok(result) : BadRequest(result);
         }
 
         [HttpPost("CreateNewSucursal")]
-        [CheckEmpresa]
         public async Task<IActionResult> CreateNewSucursal([FromForm]CreateSucursalDto sucursalDto, [FromQuery] string nitEmpresa)
         {
+            var authorizationResult = await _authorizationService.AuthorizeAsync(User, nitEmpresa, "CheckEmpresaPolicy");
+
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
+
             var result = await _sucursalService.CreateNewSucursalAsync(sucursalDto,nitEmpresa);
-            return result.IsSuccess
-                ? (IActionResult)Ok(result)
-                : BadRequest(result);
+            return result.IsSuccess ? (IActionResult)Ok(result) : BadRequest(result);
         }
 
         //[HttpPut("EditSucursal")]
