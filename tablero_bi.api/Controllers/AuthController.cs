@@ -11,10 +11,12 @@ namespace tablero_bi.api.Controllers
     {
         private readonly IUsuarioService _usuarioService;
         private readonly ITokenService _tokenService;
-        public AuthController(IUsuarioService usuarioService, ITokenService tokenService)
+        private readonly ILoggerService _logger;
+        public AuthController(IUsuarioService usuarioService, ITokenService tokenService, ILoggerService logger)
         {
             _usuarioService = usuarioService;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         [HttpPost("IniciarSesion")]

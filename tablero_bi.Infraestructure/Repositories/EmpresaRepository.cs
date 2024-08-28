@@ -116,6 +116,7 @@ namespace tablero_bi.Infraestructure.Repositories
 
         public async Task<IEnumerable<Empresas>> GetAllEmpresasAsync()
         {
+
             var query = @"SELECT Nit, NombreEmpresa, Logo,Email, FechaDeSistema FROM Empresas";
             var listEmpresas = await _db.QueryAsync<Empresas>(query);
             return listEmpresas;
